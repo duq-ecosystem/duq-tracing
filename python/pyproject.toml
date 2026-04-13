@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jarvis-tracing"
+version = "0.1.0"
+description = "Distributed tracing library for Jarvis services"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Danny" }
+]
+keywords = ["tracing", "distributed", "redis", "fastapi"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: FastAPI",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "pydantic>=2.0",
+    "redis>=5.0",
+    "starlette>=0.27",
+]
+
+[project.optional-dependencies]
+otel = [
+    "opentelemetry-api>=1.24.0",
+    "opentelemetry-sdk>=1.24.0",
+]
+otlp = [
+    "opentelemetry-exporter-otlp>=1.24.0",
+]
+all = [
+    "jarvis-tracing[otel,otlp]",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1",
+    "jarvis-tracing[otel]",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["jarvis_tracing"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
