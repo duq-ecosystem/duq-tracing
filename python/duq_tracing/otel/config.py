@@ -21,12 +21,12 @@ from ..models import ServiceName
 class TracingConfig:
     """Configuration for OpenTelemetry tracing."""
 
-    service_name: str = "jarvis"
+    service_name: str = "duq"
     service_version: str = "1.0.0"
 
-    # Redis exporter (for jarvis-admin SSE)
+    # Redis exporter (for duq-admin SSE)
     redis_url: str = "redis://localhost:6379"
-    redis_channel: str = "jarvis:traces"
+    redis_channel: str = "duq:traces"
     redis_enabled: bool = True
 
     # OTLP exporter (for Jaeger, Grafana Tempo, etc.)
@@ -59,7 +59,7 @@ def configure_tracing(
 
     Example:
         config = TracingConfig(
-            service_name="jarvis-backend",
+            service_name="duq-backend",
             redis_enabled=True,
             otlp_endpoint="http://jaeger:4317",
             otlp_enabled=True,
@@ -77,7 +77,7 @@ def configure_tracing(
     # Create tracer provider
     provider = TracerProvider(resource=resource)
 
-    # Add Redis exporter (for backward compatibility with jarvis-admin)
+    # Add Redis exporter (for backward compatibility with duq-admin)
     if config.redis_enabled:
         from .exporter import RedisSpanExporter
         redis_exporter = RedisSpanExporter(
@@ -114,7 +114,7 @@ def configure_tracing(
     return provider
 
 
-def get_tracer(name: str = "jarvis") -> trace.Tracer:
+def get_tracer(name: str = "duq") -> trace.Tracer:
     """Get a tracer instance."""
     return trace.get_tracer(name)
 

@@ -43,7 +43,7 @@ def traced(
     """
     def decorator(func: F) -> F:
         span_name = operation or func.__name__
-        tracer = trace.get_tracer(f"jarvis.{service.value}")
+        tracer = trace.get_tracer(f"duq.{service.value}")
         is_async = inspect.iscoroutinefunction(func)
 
         if is_async:
@@ -111,7 +111,7 @@ class TracedClass:
         super().__init_subclass__(**kwargs)
 
         service = getattr(cls, "_service", ServiceName.BACKEND)
-        tracer = trace.get_tracer(f"jarvis.{service.value}")
+        tracer = trace.get_tracer(f"duq.{service.value}")
 
         for name, method in inspect.getmembers(cls, predicate=inspect.isfunction):
             if name.startswith("_"):

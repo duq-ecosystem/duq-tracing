@@ -5,14 +5,14 @@ Tests for trace publisher.
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from jarvis_tracing.context import clear_trace_context, set_trace_id, set_span_id
-from jarvis_tracing.publisher import (
+from duq_tracing.context import clear_trace_context, set_trace_id, set_span_id
+from duq_tracing.publisher import (
     TracePublisher,
     TracedOperation,
     get_publisher,
     set_publisher,
 )
-from jarvis_tracing.models import ServiceName, TraceEvent, TraceStatus
+from duq_tracing.models import ServiceName, TraceEvent, TraceStatus
 
 
 class TestTracePublisher:
@@ -23,7 +23,7 @@ class TestTracePublisher:
         publisher = TracePublisher()
 
         assert publisher.redis_url == "redis://localhost:6379"
-        assert publisher.channel == "jarvis:traces"
+        assert publisher.channel == "duq:traces"
         assert publisher.enabled is True
         assert publisher._redis is None
 
@@ -348,7 +348,7 @@ class TestGlobalPublisher:
     def test_get_publisher_initial(self):
         """Should return None initially."""
         # Reset global state
-        import jarvis_tracing.publisher as pub_module
+        import duq_tracing.publisher as pub_module
 
         pub_module._publisher = None
 

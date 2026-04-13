@@ -26,7 +26,7 @@ type PublisherConfig struct {
 func DefaultConfig() *PublisherConfig {
 	return &PublisherConfig{
 		RedisURL: "redis://localhost:6379",
-		Channel:  "jarvis:traces",
+		Channel:  "duq:traces",
 		Enabled:  true,
 	}
 }

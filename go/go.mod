@@ -1,4 +1,4 @@
-module jarvis-tracing
+module duq-tracing
 
 go 1.21
 

@@ -43,7 +43,7 @@ class TracingMiddleware(BaseHTTPMiddleware):
     - Adds X-Trace-ID to response headers
 
     Example:
-        from jarvis_tracing import TracingMiddleware, TracePublisher
+        from duq_tracing import TracingMiddleware, TracePublisher
 
         publisher = TracePublisher(redis_url="redis://localhost:6379")
         await publisher.connect()

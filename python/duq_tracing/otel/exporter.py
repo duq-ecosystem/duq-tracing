@@ -3,7 +3,7 @@ Redis Span Exporter
 ===================
 
 Custom OpenTelemetry exporter that publishes spans to Redis Pub/Sub.
-Maintains backward compatibility with jarvis-admin SSE streaming.
+Maintains backward compatibility with duq-admin SSE streaming.
 """
 
 import json
@@ -24,13 +24,13 @@ class RedisSpanExporter(SpanExporter):
     """
     Exports OpenTelemetry spans to Redis Pub/Sub.
 
-    Converts OTel spans to the TraceEvent JSON format expected by jarvis-admin.
+    Converts OTel spans to the TraceEvent JSON format expected by duq-admin.
     This allows gradual migration to OpenTelemetry while keeping existing dashboards.
 
     Example:
         exporter = RedisSpanExporter(
             redis_url="redis://localhost:6379",
-            channel="jarvis:traces"
+            channel="duq:traces"
         )
         provider.add_span_processor(BatchSpanProcessor(exporter))
     """
@@ -38,7 +38,7 @@ class RedisSpanExporter(SpanExporter):
     def __init__(
         self,
         redis_url: str = "redis://localhost:6379",
-        channel: str = "jarvis:traces",
+        channel: str = "duq:traces",
     ):
         self.redis_url = redis_url
         self.channel = channel

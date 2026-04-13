@@ -2,15 +2,15 @@
 OpenTelemetry-based Tracing
 ===========================
 
-Drop-in replacement for jarvis_tracing using OpenTelemetry SDK.
+Drop-in replacement for duq_tracing using OpenTelemetry SDK.
 Provides the same API but with industry-standard tracing.
 
 Migration:
     # Before:
-    from jarvis_tracing import TracePublisher, traced, TracingMiddleware
+    from duq_tracing import TracePublisher, traced, TracingMiddleware
 
     # After:
-    from jarvis_tracing.otel import TracePublisher, traced, TracingMiddleware
+    from duq_tracing.otel import TracePublisher, traced, TracingMiddleware
 """
 
 from .config import configure_tracing, TracingConfig

@@ -5,9 +5,9 @@ Tests for tracing decorators.
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from jarvis_tracing.context import clear_trace_context, set_trace_id, set_span_id
-from jarvis_tracing.decorators import traced, _safe_repr, TracedClass
-from jarvis_tracing.models import ServiceName, TraceStatus
+from duq_tracing.context import clear_trace_context, set_trace_id, set_span_id
+from duq_tracing.decorators import traced, _safe_repr, TracedClass
+from duq_tracing.models import ServiceName, TraceStatus
 
 
 class TestSafeRepr:
@@ -72,7 +72,7 @@ class TestTracedDecorator:
         clear_trace_context()
 
         mock_publisher = AsyncMock()
-        with patch("jarvis_tracing.decorators.get_publisher", return_value=mock_publisher):
+        with patch("duq_tracing.decorators.get_publisher", return_value=mock_publisher):
 
             @traced("test_op")
             async def my_func():
@@ -93,7 +93,7 @@ class TestTracedDecorator:
         mock_publisher = AsyncMock()
         mock_publisher.publish = AsyncMock(return_value=True)
 
-        with patch("jarvis_tracing.decorators.get_publisher", return_value=mock_publisher):
+        with patch("duq_tracing.decorators.get_publisher", return_value=mock_publisher):
 
             @traced("test_operation", service=ServiceName.BACKEND)
             async def my_func():
@@ -121,7 +121,7 @@ class TestTracedDecorator:
 
         mock_publisher.publish = capture_publish
 
-        with patch("jarvis_tracing.decorators.get_publisher", return_value=mock_publisher):
+        with patch("duq_tracing.decorators.get_publisher", return_value=mock_publisher):
 
             @traced("test_op", capture_args=True)
             async def my_func(a, b, key="value"):
@@ -150,7 +150,7 @@ class TestTracedDecorator:
 
         mock_publisher.publish = capture_publish
 
-        with patch("jarvis_tracing.decorators.get_publisher", return_value=mock_publisher):
+        with patch("duq_tracing.decorators.get_publisher", return_value=mock_publisher):
 
             @traced("test_op", capture_result=True)
             async def my_func():
@@ -184,7 +184,7 @@ class TestTracedDecorator:
 
         mock_publisher.publish = capture_publish
 
-        with patch("jarvis_tracing.decorators.get_publisher", return_value=mock_publisher):
+        with patch("duq_tracing.decorators.get_publisher", return_value=mock_publisher):
 
             @traced("failing_op")
             async def failing_func():

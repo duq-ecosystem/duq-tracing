@@ -41,7 +41,7 @@ class TracingMiddleware(BaseHTTPMiddleware):
     - Error tracking
 
     Example:
-        from jarvis_tracing.otel import TracingMiddleware
+        from duq_tracing.otel import TracingMiddleware
 
         app.add_middleware(
             TracingMiddleware,
@@ -59,7 +59,7 @@ class TracingMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.service = service
         self.skip_paths = skip_paths or ["/health", "/metrics", "/favicon.ico"]
-        self._tracer = trace.get_tracer(f"jarvis.{service.value}")
+        self._tracer = trace.get_tracer(f"duq.{service.value}")
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         # Skip tracing for health checks, etc.

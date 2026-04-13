@@ -1,4 +1,4 @@
-// Package tracing provides distributed tracing for Jarvis services.
+// Package tracing provides distributed tracing for Duq services.
 package tracing
 
 import (

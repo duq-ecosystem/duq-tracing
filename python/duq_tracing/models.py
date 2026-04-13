@@ -3,7 +3,7 @@ Trace Event Models
 ==================
 
 Pydantic models for distributed tracing events.
-This is the unified contract for all Jarvis services.
+This is the unified contract for all Duq services.
 """
 
 from datetime import datetime

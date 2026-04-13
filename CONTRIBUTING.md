@@ -1,4 +1,4 @@
-# Contributing to Jarvis Tracing
+# Contributing to Duq Tracing
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to this project.
 
@@ -103,7 +103,7 @@ test(python): add tests for middleware
 
 ```bash
 cd python
-pytest --cov=jarvis_tracing --cov-report=html
+pytest --cov=duq_tracing --cov-report=html
 ```
 
 ### Go

@@ -5,7 +5,7 @@ Tests for tracing models.
 import pytest
 from datetime import datetime
 
-from jarvis_tracing.models import (
+from duq_tracing.models import (
     TraceEvent,
     ServiceName,
     TraceStatus,

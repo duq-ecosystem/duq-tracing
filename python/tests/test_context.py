@@ -5,7 +5,7 @@ Tests for trace context management.
 import pytest
 import asyncio
 
-from jarvis_tracing.context import (
+from duq_tracing.context import (
     generate_trace_id,
     generate_span_id,
     get_trace_id,

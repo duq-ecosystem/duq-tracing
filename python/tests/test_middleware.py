@@ -5,15 +5,15 @@ Tests for tracing middleware.
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from jarvis_tracing.context import clear_trace_context, set_trace_id, set_span_id, get_trace_id
-from jarvis_tracing.middleware import (
+from duq_tracing.context import clear_trace_context, set_trace_id, set_span_id, get_trace_id
+from duq_tracing.middleware import (
     TracingMiddleware,
     extract_trace_headers,
     inject_trace_headers,
     TRACE_ID_HEADER,
     SPAN_ID_HEADER,
 )
-from jarvis_tracing.models import ServiceName
+from duq_tracing.models import ServiceName
 
 
 class MockRequest:

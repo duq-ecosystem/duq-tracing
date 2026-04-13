@@ -27,7 +27,7 @@ class TracePublisher:
     exporters (Redis, OTLP, Console).
 
     Example:
-        from jarvis_tracing.otel import TracePublisher, configure_tracing, TracingConfig
+        from duq_tracing.otel import TracePublisher, configure_tracing, TracingConfig
 
         # Configure once at startup
         configure_tracing(TracingConfig(redis_enabled=True))
@@ -43,7 +43,7 @@ class TracePublisher:
 
     def __init__(
         self,
-        service_name: str = "jarvis",
+        service_name: str = "duq",
         **kwargs  # Accept old parameters for compatibility
     ):
         self.service_name = service_name

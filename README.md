@@ -1,6 +1,6 @@
-# Jarvis Tracing
+# Duq Tracing
 
-Distributed tracing library for Jarvis services. Provides unified tracing across Python and Go services with Redis Pub/Sub transport.
+Distributed tracing library for Duq services. Provides unified tracing across Python and Go services with Redis Pub/Sub transport.
 
 ## Features
 
@@ -21,7 +21,7 @@ pip install -e ./python
 ### Go
 
 ```bash
-go get github.com/danny/jarvis-tracing/tracing
+go get github.com/danny/duq-tracing/tracing
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ go get github.com/danny/jarvis-tracing/tracing
 ### Python
 
 ```python
-from jarvis_tracing import (
+from duq_tracing import (
     TracePublisher,
     TracingMiddleware,
     traced,
@@ -56,12 +56,12 @@ async def call_llm():
 ### Go
 
 ```go
-import "github.com/danny/jarvis-tracing/tracing"
+import "github.com/danny/duq-tracing/tracing"
 
 // Initialize publisher
 cfg := &tracing.PublisherConfig{
     RedisURL: "redis://localhost:6379",
-    Channel:  "jarvis:traces",
+    Channel:  "duq:traces",
     Enabled:  true,
 }
 publisher, _ := tracing.NewPublisher(cfg)
@@ -100,7 +100,7 @@ All events conform to this JSON schema:
 Environment variables:
 
 - `REDIS_URL` - Redis connection URL (default: `redis://localhost:6379`)
-- `TRACE_CHANNEL` - Redis Pub/Sub channel (default: `jarvis:traces`)
+- `TRACE_CHANNEL` - Redis Pub/Sub channel (default: `duq:traces`)
 - `TRACING_ENABLED` - Enable/disable tracing (default: `true`)
 
 ## License

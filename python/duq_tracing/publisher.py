@@ -45,7 +45,7 @@ class TracePublisher:
     def __init__(
         self,
         redis_url: str = "redis://localhost:6379",
-        channel: str = "jarvis:traces",
+        channel: str = "duq:traces",
         enabled: bool = True,
     ):
         self.redis_url = redis_url

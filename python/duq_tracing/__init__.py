@@ -1,11 +1,11 @@
 """
-Jarvis Tracing Library
-======================
+Duq Tracing Library
+===================
 
-Distributed tracing for Jarvis services.
+Distributed tracing for Duq services.
 
 Quick Start:
-    from jarvis_tracing import (
+    from duq_tracing import (
         TracePublisher,
         TracingMiddleware,
         traced,

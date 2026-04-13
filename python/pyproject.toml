@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jarvis-tracing"
+name = "duq-tracing"
 version = "0.1.0"
-description = "Distributed tracing library for Jarvis services"
+description = "Distributed tracing library for Duq services"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -37,17 +37,17 @@ otlp = [
     "opentelemetry-exporter-otlp>=1.24.0",
 ]
 all = [
-    "jarvis-tracing[otel,otlp]",
+    "duq-tracing[otel,otlp]",
 ]
 dev = [
     "pytest>=7.0",
     "pytest-asyncio>=0.21",
     "ruff>=0.1",
-    "jarvis-tracing[otel]",
+    "duq-tracing[otel]",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["jarvis_tracing"]
+packages = ["duq_tracing"]
 
 [tool.ruff]
 line-length = 100
