@@ -10,6 +10,7 @@ import asyncio
 import logging
 from datetime import datetime
 from typing import Any, Optional
+from urllib.parse import urlparse
 
 from .context import (
     SpanContext,
@@ -21,6 +22,28 @@ from .context import (
 from .models import Operations, ServiceName, TraceEvent, TraceStatus
 
 logger = logging.getLogger(__name__)
+
+
+def _mask_redis_url(redis_url: str) -> str:
+    """Mask credentials in Redis URL for safe logging."""
+    try:
+        parsed = urlparse(redis_url)
+        # Mask password if present
+        if parsed.password:
+            masked = f"{parsed.scheme}://"
+            if parsed.username:
+                masked += f"{parsed.username}:***@"
+            else:
+                masked += "***@"
+            masked += f"{parsed.hostname}"
+            if parsed.port:
+                masked += f":{parsed.port}"
+            if parsed.path:
+                masked += parsed.path
+            return masked
+        return redis_url
+    except Exception:
+        return "redis://***"
 
 
 class TracePublisher:
@@ -64,7 +87,7 @@ class TracePublisher:
             self._redis = redis.from_url(self.redis_url)
             # Test connection
             await self._redis.ping()
-            logger.info("TracePublisher connected to Redis: %s", self.redis_url)
+            logger.info("TracePublisher connected to Redis: %s", _mask_redis_url(self.redis_url))
         except Exception as e:
             logger.error("Failed to connect to Redis: %s", e)
             self._redis = None

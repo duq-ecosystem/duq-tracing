@@ -6,6 +6,7 @@ FastAPI/Starlette middleware for automatic request tracing.
 Extracts or generates trace_id from X-Trace-ID header.
 """
 
+import re
 import time
 from typing import Callable, Optional
 
@@ -30,6 +31,60 @@ from .publisher import TracePublisher
 # Header names
 TRACE_ID_HEADER = "X-Trace-ID"
 SPAN_ID_HEADER = "X-Span-ID"
+
+# Security: UUID v4 pattern for trace ID validation
+UUID_V4_PATTERN = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+    re.IGNORECASE,
+)
+
+# Security: Sensitive query parameter keys to mask
+SENSITIVE_QUERY_KEYS = frozenset({
+    "api_key", "apikey", "token", "access_token", "refresh_token",
+    "password", "secret", "credential", "auth", "key", "bearer",
+})
+
+
+def _is_valid_trace_id(trace_id: str) -> bool:
+    """Validate trace ID format (UUID v4)."""
+    return bool(UUID_V4_PATTERN.match(trace_id))
+
+
+def _sanitize_query_params(params: str) -> str:
+    """Sanitize query parameters, masking sensitive values."""
+    if not params:
+        return None
+
+    sanitized_parts = []
+    for part in params.split("&"):
+        if "=" in part:
+            key, _, value = part.partition("=")
+            if key.lower() in SENSITIVE_QUERY_KEYS:
+                sanitized_parts.append(f"{key}=***")
+            else:
+                sanitized_parts.append(part)
+        else:
+            sanitized_parts.append(part)
+
+    return "&".join(sanitized_parts) if sanitized_parts else None
+
+
+def _sanitize_error_message(error_msg: str) -> str:
+    """Sanitize error message, removing potential sensitive data."""
+    if not error_msg:
+        return None
+
+    # Truncate long messages
+    if len(error_msg) > 200:
+        error_msg = error_msg[:200] + "..."
+
+    # Mask common sensitive patterns
+    error_msg = re.sub(r"password['\"]?\s*[=:]\s*['\"]?[^'\"\s,\)]+", "password=***", error_msg, flags=re.IGNORECASE)
+    error_msg = re.sub(r"api[_-]?key['\"]?\s*[=:]\s*['\"]?[^'\"\s,\)]+", "api_key=***", error_msg, flags=re.IGNORECASE)
+    error_msg = re.sub(r"token['\"]?\s*[=:]\s*['\"]?[^'\"\s,\)]+", "token=***", error_msg, flags=re.IGNORECASE)
+    error_msg = re.sub(r"@[a-z0-9\-\.]+:[^@]+@", "@***:***@", error_msg, flags=re.IGNORECASE)
+
+    return error_msg
 
 
 class TracingMiddleware(BaseHTTPMiddleware):
@@ -72,19 +127,24 @@ class TracingMiddleware(BaseHTTPMiddleware):
         if any(request.url.path.startswith(p) for p in self.skip_paths):
             return await call_next(request)
 
-        # Extract or generate trace_id
-        trace_id = request.headers.get(TRACE_ID_HEADER) or generate_trace_id()
+        # Security: Extract and validate trace_id from header
+        header_trace_id = request.headers.get(TRACE_ID_HEADER)
+        if header_trace_id and _is_valid_trace_id(header_trace_id):
+            trace_id = header_trace_id
+        else:
+            trace_id = generate_trace_id()
         span_id = generate_span_id()
 
         # Set context for this request
         with TraceContext(trace_id) as ctx:
             start_time = time.perf_counter()
 
-            # Build metadata
+            # Build metadata (Security: sanitize query params)
+            raw_query = str(request.query_params) if request.query_params else None
             metadata = {
                 "method": request.method,
                 "path": request.url.path,
-                "query": str(request.query_params) if request.query_params else None,
+                "query": _sanitize_query_params(raw_query),
                 "client_host": request.client.host if request.client else None,
             }
 
@@ -118,7 +178,9 @@ class TracingMiddleware(BaseHTTPMiddleware):
                 return response
 
             except Exception as e:
-                error_msg = f"{type(e).__name__}: {str(e)}"
+                # Security: Sanitize error message before including in trace
+                raw_error = f"{type(e).__name__}: {str(e)}"
+                error_msg = _sanitize_error_message(raw_error)
                 raise
 
             finally:
