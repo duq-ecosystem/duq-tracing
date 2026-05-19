@@ -1,3 +1,6 @@
+# ⛔ ЛОКАЛЬНОЕ ТЕСТИРОВАНИЕ ЗАПРЕЩЕНО - ТОЛЬКО VPS 90.156.230.49 ⛔
+
+
 # Duq Tracing
 
 Distributed tracing library for Duq services. Provides unified tracing across Python and Go services with Redis Pub/Sub transport.
