@@ -1,4 +1,16 @@
-"""A2A Protocol tracing for agent-to-agent communication."""
+"""A2A Protocol tracing for agent-to-agent communication.
+
+Example logging configuration:
+    import logging
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+
+    # Enable A2A tracing logs
+    logging.getLogger("duq.a2a").setLevel(logging.INFO)
+"""
 
 from __future__ import annotations
 
@@ -13,9 +25,9 @@ from typing import Any, Literal
 logger = logging.getLogger(__name__)
 
 SECRET_PATTERNS = [
-    (re.compile(r"sk-[a-zA-Z0-9]{10,}"), "[REDACTED:API_KEY]"),
-    (re.compile(r"Bearer\s+[a-zA-Z0-9._-]+"), "Bearer [REDACTED]"),
-    (re.compile(r"token[\"']?\s*[:=]\s*[\"']?[a-zA-Z0-9._-]{10,}"), "token: [REDACTED]"),
+    (re.compile(r"sk-[a-zA-Z0-9._\-+=\/]{10,}"), "[REDACTED:API_KEY]"),
+    (re.compile(r"Bearer\s+[a-zA-Z0-9._\-+=\/]+"), "Bearer [REDACTED]"),
+    (re.compile(r"token[\"']?\s*[:=]\s*[\"']?[a-zA-Z0-9._\-+=\/]{10,}"), "token: [REDACTED]"),
 ]
 
 MAX_PREVIEW_LENGTH = 500
@@ -32,7 +44,6 @@ class A2ALogEntry:
     from_: str = ""
     to: str = ""
     message_preview: str = ""
-    full_message_path: str | None = None
     correlation_id: str | None = None
     requires_approval: bool = False
     approval_context: dict[str, Any] | None = None
@@ -91,7 +102,13 @@ class A2ATracer:
             requires_approval: Whether this message requires human approval.
             approval_context: Context for approval decision (risk level, description).
             correlation_id: Optional correlation ID for request-response matching.
+
+        Raises:
+            ValueError: If task_id, from_, or to are empty or None.
         """
+        if not task_id or not from_ or not to:
+            raise ValueError("task_id, from_, and to must be non-empty strings")
+
         masked = self._mask_secrets(message)
         preview = self._truncate(masked)
 
