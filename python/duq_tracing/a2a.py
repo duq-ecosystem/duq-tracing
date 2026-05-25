@@ -1,28 +1,18 @@
 """A2A Protocol tracing for agent-to-agent communication.
 
-Example logging configuration:
-    import logging
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-
-    # Enable A2A tracing logs
-    logging.getLogger("duq.a2a").setLevel(logging.INFO)
+Logs are emitted via loguru for visibility in agent containers.
 """
 
 from __future__ import annotations
 
 import json
-import logging
 import re
 from collections import deque
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 SECRET_PATTERNS = [
     (re.compile(r"sk-[a-zA-Z0-9._\-+=\/]{10,}"), "[REDACTED:API_KEY]"),
@@ -65,7 +55,6 @@ class A2ATracer:
             max_logs: Maximum number of logs to retain in memory.
         """
         self._logs: deque[dict[str, Any]] = deque(maxlen=max_logs)
-        self._logger = logging.getLogger("duq.a2a")
 
     def _mask_secrets(self, text: str) -> str:
         """Mask sensitive data in text."""
@@ -125,7 +114,7 @@ class A2ATracer:
 
         log_dict = entry.to_dict()
         self._logs.append(log_dict)
-        self._logger.info(json.dumps(log_dict))
+        logger.info(f"[A2A] {json.dumps(log_dict)}")
 
     def get_recent_logs(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent logs in reverse chronological order.
