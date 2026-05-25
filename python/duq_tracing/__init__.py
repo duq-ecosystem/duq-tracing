@@ -29,6 +29,7 @@ Quick Start:
         ...
 """
 
+from .a2a import A2ALogEntry, A2ATracer
 from .context import (
     SpanContext,
     TraceContext,
@@ -38,24 +39,24 @@ from .context import (
     get_or_create_trace_id,
     get_parent_span_id,
     get_span_id,
-    get_trace_id,
     get_trace_context,
+    get_trace_id,
     set_parent_span_id,
     set_span_id,
     set_trace_id,
 )
-from .decorators import traced, TracedClass
+from .decorators import TracedClass, traced
 from .middleware import (
-    TracingMiddleware,
-    TRACE_ID_HEADER,
     SPAN_ID_HEADER,
+    TRACE_ID_HEADER,
+    TracingMiddleware,
     extract_trace_headers,
     inject_trace_headers,
 )
 from .models import Operations, ServiceName, TraceEvent, TraceStatus
 from .publisher import (
-    TracePublisher,
     TracedOperation,
+    TracePublisher,
     get_publisher,
     set_publisher,
 )
@@ -96,4 +97,7 @@ __all__ = [
     # Decorators
     "traced",
     "TracedClass",
+    # A2A Tracing
+    "A2ATracer",
+    "A2ALogEntry",
 ]
